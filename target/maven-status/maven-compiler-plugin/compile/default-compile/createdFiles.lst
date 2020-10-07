@@ -1,6 +1,7 @@
 module-info.class
 by\bsuir\Container.class
 by\bsuir\Dictionary.class
+by\bsuir\MainWindowController$OperandAndOperator.class
 by\bsuir\FileService.class
 by\bsuir\LexicalAnalyzer.class
 by\bsuir\App.class

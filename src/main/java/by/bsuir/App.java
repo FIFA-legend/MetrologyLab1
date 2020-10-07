@@ -8,15 +8,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * JavaFX App
- */
 public class App extends Application {
 
     private static Scene scene;
 
+    private static Stage mainStage;
+
+    public static Stage getMainStage() {
+        return mainStage;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
+        mainStage = stage;
         scene = new Scene(loadFXML("MainWindow.fxml"));
         stage.setTitle("Анализатор кода");
         stage.setScene(scene);

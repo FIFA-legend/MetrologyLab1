@@ -4,7 +4,11 @@ public class Dictionary {
 
     public final String[] PY_IDENTIFIER;
 
-    public final String[] PY_KEYWORDS;
+    public final String[] PY_KEYWORDS_OPERATORS;
+
+    public final String[] PY_KEYWORDS_OPERANDS;
+
+    public final String[] PY_HELP_KEYWORDS;
 
     private final String[] PY_STATEMENTS;
 
@@ -17,11 +21,17 @@ public class Dictionary {
     }
 
     {
-        PY_KEYWORDS = new String[] { "False", "None", "True", "and", "as", "assert", "break", "class",
-            "continue", "def", "del", "except", "finally", "for", "from",
-            "global", "if", "import", "in", "is", "lambda", "nonlocal", "not",
-            "or", "pass", "raise", "return", "try", "while", "with", "yield",
-            "else", "elif" };
+        PY_KEYWORDS_OPERATORS = new String[] { "and", "assert", "break", "continue",
+            "del", "for", "if", "import", "in", "is", "not", "except", "finally",
+            "or", "pass", "raise", "return", "try", "while", "yield", "elif" };
+    }
+
+    {
+        PY_KEYWORDS_OPERANDS = new String[] { "False", "True", "None" };
+    }
+
+    {
+        PY_HELP_KEYWORDS = new String[] { "as", "else", "class", "def", "from", "global", "nonlocal", "lambda", "with" };
     }
 
     {
@@ -41,9 +51,31 @@ public class Dictionary {
         return false;
     }
 
-    public boolean isInPyKeywords(String lexem) {
+    public boolean isInPyKeywordsOperators(String lexem) {
         if (!lexem.equals(" ")) {
-            for (String pyKeyword : this.PY_KEYWORDS) {
+            for (String pyKeyword : this.PY_KEYWORDS_OPERATORS) {
+                if (lexem.equals(pyKeyword)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isInPyKeywordsOperands(String lexem) {
+        if (!lexem.equals(" ")) {
+            for (String pyKeyword : this.PY_KEYWORDS_OPERANDS) {
+                if (lexem.equals(pyKeyword)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isInPyHelpKeywords(String lexem) {
+        if (!lexem.equals(" ")) {
+            for (String pyKeyword : this.PY_HELP_KEYWORDS) {
                 if (lexem.equals(pyKeyword)) {
                     return true;
                 }

@@ -22,7 +22,11 @@ public class LexicalAnalyzer {
 
     public void lexAlloc(List<String> operands, List<String> operators, List<String> arrOfLexems) {
         for (String lexem : arrOfLexems) {
-            if (DICTIONARY.isInPyStatements(lexem) || DICTIONARY.isInPyKeywords(lexem)) {
+            if (DICTIONARY.isInPyHelpKeywords(lexem)) {
+                continue;
+            } else if (DICTIONARY.isInPyKeywordsOperands(lexem)) {
+                operands.add(lexem);
+            } else if (DICTIONARY.isInPyStatements(lexem) || DICTIONARY.isInPyKeywordsOperators(lexem)) {
                 operators.add(lexem);
             } else if (lexem.contains("()")) {
                 operators.add(lexem);

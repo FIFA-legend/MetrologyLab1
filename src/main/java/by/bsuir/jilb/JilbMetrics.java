@@ -69,9 +69,13 @@ public class JilbMetrics {
         }
         if (depth < prevDepth) {
             this.compareMaps(depth);
-            for (int conditionalKey : simpleOperands.keySet()) {
-                if (conditionalKey >= depth) simpleOperands.remove(conditionalKey);
+            List<Integer> simpleList = new LinkedList<>(simpleOperands.keySet());
+            for (int l : simpleList) {
+                if (l >= depth) simpleOperands.remove(l);
             }
+            /*for (int conditionalKey : simpleOperands.keySet()) {
+                if (conditionalKey >= depth) simpleOperands.remove(conditionalKey);
+            }*/
             List<Integer> list = new LinkedList<>(tempElif.keySet());
             for (int l : list) {
                 if (l > depth) tempElif.remove(l);

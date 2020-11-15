@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.HolshedMetricsController">
+    <AnchorPane layoutY="-6.0" prefHeight="99.0" prefWidth="800.0" style="-fx-background-color: #000000;">
+        <ToolBar layoutY="155.0" prefHeight="40.0" prefWidth="800.0">
+            <Button fx:id="OpenButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="Открыть" />
+            <Button fx:id="HelpButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="Помощь" />
+         <Button fx:id="ReturnButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="Назад" />
+        </ToolBar>
+        <Text fill="WHITE" layoutX="283.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Анализатор кода">
+            <font>
+                <Font size="30.0" />
+            </font>
+        </Text>
+    </AnchorPane>
+    <Text layoutX="90.0" layoutY="325.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Анализатор кода&#10;Предназначена для анализа кода на языке Python&#10;Загрузите файл с расширением .txt, и программа проанализирует ваш код&#10;Авторы - Зелезинский Иван, Колодко Никита&#10;Минск, БГУИР. 2020">
+        <font>
+          <Font size="18.0" />
+        </font>
+    </Text>
+    <TableView fx:id="OperatorTable" layoutX="50.0" layoutY="220.0" prefHeight="350.0" prefWidth="350.0">
+      <columns>
+          <TableColumn fx:id="OperatorsNumber" prefWidth="75.0" text="Номер" />
+          <TableColumn fx:id="OperatorsName" prefWidth="175.0" text="Оператор" />
+          <TableColumn fx:id="OperatorsCount" prefWidth="100.0" text="Количество" />
+      </columns>
+    </TableView>
+    <TableView fx:id="OperandTable" layoutX="400.0" layoutY="220.0" prefHeight="350.0" prefWidth="350.0">
+      <columns>
+          <TableColumn fx:id="OperandsNumber" prefWidth="75.0" text="Номер" />
+          <TableColumn fx:id="OperandsName" prefWidth="175.0" text="Операнд" />
+          <TableColumn fx:id="OperandsCount" prefWidth="100.0" text="Количество" />
+      </columns>
+    </TableView>
+</AnchorPane>

@@ -21,19 +21,32 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         mainStage = stage;
-        scene = new Scene(loadFXML("MainWindow.fxml"));
+        scene = new Scene(loadMainFXML());
         stage.setTitle("Анализатор кода");
         stage.setScene(scene);
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+    private static Parent loadMainFXML() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("MainWindow.fxml"));
+        return fxmlLoader.load();
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
-        return fxmlLoader.load();
+    public static void hideWindow(String str) {
+        FXMLLoader loader = getLoader(str);
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Parent root = loader.getRoot();
+        App.getMainStage().setScene(new Scene(root));
+        App.getMainStage().show();
+    }
+
+    private static FXMLLoader getLoader(String fxml) {
+        return new FXMLLoader(App.class.getResource(fxml));
     }
 
     public static void main(String[] args) {

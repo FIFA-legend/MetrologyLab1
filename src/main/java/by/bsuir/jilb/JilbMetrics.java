@@ -73,7 +73,12 @@ public class JilbMetrics {
                 if (conditionalKey >= depth) simpleOperands.remove(conditionalKey);
             }
             List<Integer> list = new LinkedList<>(tempElif.keySet());
-            list.forEach(tempElif::remove);
+            for (int l : list) {
+                if (l > depth) tempElif.remove(l);
+            }
+            /*for (int elifKey : tempElif.keySet()) {
+                if (elifKey > depth) tempElif.remove(elifKey);
+            }*/
         }
         if (this.isCycleOperatorsInLine(line)) {
             simpleOperands.put(depth, 1);

@@ -10,14 +10,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class JilbMetrics {
 
-    private int tempIf = 0;
+    private int prevDepth;
 
-    private int tempElif = 0;
+    private int maxNestingLevel;
 
-    private boolean isIfFirst;
+    private int flushLevel;
+
+    private final Map<Integer, Integer> simpleOperands;
+
+    private final Map<Integer, Integer> tempElif;
 
     private final Container container;
 
@@ -36,6 +42,8 @@ public class JilbMetrics {
         this.analyzer = analyzer;
         this.file = file;
         this.service = service;
+        tempElif = new TreeMap<>();
+        simpleOperands = new TreeMap<>();
     }
 
     public void initLexemes() {
@@ -43,51 +51,60 @@ public class JilbMetrics {
     }
 
     public int getMaxNestingLevel() {
-        int maxNestingLevel = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine();
             while (line != null) {
-                maxNestingLevel = this.getMaxNestingLevel(line.concat("\n"), maxNestingLevel);
+                this.getMaxNestingLevel(line.concat("\n"));
                 line = br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return maxNestingLevel / 4;
+        this.compareMaps(0);
+        return maxNestingLevel;
     }
 
-    private int getMaxNestingLevel(String line, int deep) {
-        int tempDeep = 0;
-
+    private void getMaxNestingLevel(String line) {
+        int depth = 0;
         for (int i = 0; i < line.length(); i++) {
-            if ((line.charAt(i) == ' ') && (isConditionsOperatorsInLine(line))) {
-                tempDeep++;
+            if (line.charAt(i) == ' ') depth++;
+            else break;
+        }
+        if (depth < prevDepth) {
+            this.compareMaps(depth);
+            for (int conditionalKey : simpleOperands.keySet()) {
+                if (conditionalKey >= depth) simpleOperands.remove(conditionalKey);
+            }
+            for (int elifKey : tempElif.keySet()) {
+                if (elifKey > depth) tempElif.remove(elifKey);
+            }
+        }
+        if (this.isCycleOperatorsInLine(line)) {
+            simpleOperands.put(depth, 1);
+        }
+        if (this.isElifInLine(line) || this.isIfInLine(line)) {
+            if (depth == flushLevel) maxNestingLevel++;
+            if (tempElif.containsKey(depth)) {
+                tempElif.put(depth, tempElif.get(depth) + 1);
             } else {
-                break;
+                tempElif.put(depth, 1);
             }
         }
+        prevDepth = depth;
+    }
 
-        if (isIfInLine(line)) {
-            if (!isIfFirst) {
-                tempIf = tempDeep;
-                isIfFirst = true;
-            }
-
-            if (tempDeep <= tempIf) {
-                tempIf = tempDeep;
-                tempElif = 0;
-            }
+    private void compareMaps(int depth) {
+        int sum = 0;
+        for (int conditionals : simpleOperands.values()) {
+            sum += conditionals;
         }
-
-        if (isElifInLine(line)) {
-            tempElif++;
-            tempDeep = tempDeep + 4 * tempElif;
+        for (int elifs : tempElif.values()) {
+            sum += elifs;
         }
-
-        if ((tempDeep > deep) && (tempDeep % 4 == 0)) {
-            deep = tempDeep;
+        if (sum >= maxNestingLevel) {
+            maxNestingLevel = sum;
+            flushLevel = depth;
         }
-        return deep;
     }
 
     private boolean isIfInLine(String line) {
@@ -112,12 +129,11 @@ public class JilbMetrics {
         return false;
     }
 
-    private boolean isConditionsOperatorsInLine(String line) {
+    private boolean isCycleOperatorsInLine(String line) {
         List<String> lexemes = new LinkedList<>();
         analyzer.lexemesFromLine(line, lexemes);
         for (String lexeme : lexemes) {
-            if ((lexeme.equals("elif")) || (lexeme.equals("if")) ||
-                    (lexeme.equals("for")) || (lexeme.equals("while"))) {
+            if (((lexeme.equals("for") || lexeme.equals("while")))) {
                 return true;
             }
         }

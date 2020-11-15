@@ -8,10 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class JilbMetrics {
 
@@ -75,9 +72,8 @@ public class JilbMetrics {
             for (int conditionalKey : simpleOperands.keySet()) {
                 if (conditionalKey >= depth) simpleOperands.remove(conditionalKey);
             }
-            for (int elifKey : tempElif.keySet()) {
-                if (elifKey > depth) tempElif.remove(elifKey);
-            }
+            List<Integer> list = new LinkedList<>(tempElif.keySet());
+            list.forEach(tempElif::remove);
         }
         if (this.isCycleOperatorsInLine(line)) {
             simpleOperands.put(depth, 1);

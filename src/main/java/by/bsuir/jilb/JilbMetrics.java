@@ -12,15 +12,19 @@ import java.util.*;
 
 public class JilbMetrics {
 
+    private boolean elifCount;
+
+    private int elifLevel;
+
     private int prevDepth;
 
     private int maxNestingLevel;
 
-    private int flushLevel;
-
     private final Map<Integer, Integer> simpleOperands;
 
     private final Map<Integer, Integer> tempElif;
+
+    private final Set<Integer> ifLevels;
 
     private final Container container;
 
@@ -41,6 +45,7 @@ public class JilbMetrics {
         this.service = service;
         tempElif = new TreeMap<>();
         simpleOperands = new TreeMap<>();
+        ifLevels = new TreeSet<>();
     }
 
     public void initLexemes() {
@@ -62,9 +67,10 @@ public class JilbMetrics {
     }
 
     private void getMaxNestingLevel(String line) {
+        if (line.trim().isEmpty()) return;
         int depth = 0;
         for (int i = 0; i < line.length(); i++) {
-            if (line.charAt(i) == ' ') depth++;
+            if (line.charAt(i) == ' '|| line.charAt(i) == '\t') depth++;
             else break;
         }
         if (depth < prevDepth) {
@@ -80,20 +86,30 @@ public class JilbMetrics {
             for (int l : list) {
                 if (l > depth) tempElif.remove(l);
             }
+            List<Integer> ifList = new LinkedList<>(ifLevels);
+            for (int l : ifList) {
+                if (l > depth) ifLevels.remove(l);
+            }
             /*for (int elifKey : tempElif.keySet()) {
                 if (elifKey > depth) tempElif.remove(elifKey);
             }*/
         }
-        if (this.isCycleOperatorsInLine(line)) {
+        if (depth < elifLevel) {
+            elifCount = false;
+        }
+        if (this.isCycleOperatorsInLine(line) || this.isIfInLine(line)) {
+            if (this.isIfInLine(line)) ifLevels.add(depth);
             simpleOperands.put(depth, 1);
         }
-        if (this.isElifInLine(line) || this.isIfInLine(line)) {
-            if (depth == flushLevel) maxNestingLevel++;
+        if (this.isElifInLine(line)) {
+            elifLevel = depth;
+            if (ifLevels.contains(depth) && elifCount) maxNestingLevel++;
             if (tempElif.containsKey(depth)) {
                 tempElif.put(depth, tempElif.get(depth) + 1);
             } else {
                 tempElif.put(depth, 1);
             }
+            elifCount = true;
         }
         prevDepth = depth;
     }
@@ -103,12 +119,12 @@ public class JilbMetrics {
         for (int conditionals : simpleOperands.values()) {
             sum += conditionals;
         }
+        if (!tempElif.isEmpty()) sum++;
         for (int elifs : tempElif.values()) {
             sum += elifs;
         }
-        if (sum >= maxNestingLevel) {
+        if (sum > maxNestingLevel) {
             maxNestingLevel = sum;
-            flushLevel = depth;
         }
     }
 

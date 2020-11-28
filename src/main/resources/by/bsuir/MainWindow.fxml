@@ -17,5 +17,5 @@
     </AnchorPane>
    <Button fx:id="holshedMetricsButton" layoutX="320.0" layoutY="275.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" text="Метрики Холстеда" />
    <Button fx:id="jilbMetricsButton" layoutX="320.0" layoutY="350.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" text="Метрики Джилба" />
-   <Button layoutX="320.0" layoutY="425.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" text="Coming soon..." />
+   <Button fx:id="spenButton" layoutX="320.0" layoutY="425.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="160.0" text="Метрики Чепина" />
 </AnchorPane>

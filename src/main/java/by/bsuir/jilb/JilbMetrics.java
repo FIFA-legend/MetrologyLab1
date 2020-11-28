@@ -62,8 +62,8 @@ public class JilbMetrics {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.compareMaps(0);
-        return maxNestingLevel;
+        this.compareMaps();
+        return maxNestingLevel - 1;
     }
 
     private void getMaxNestingLevel(String line) {
@@ -74,14 +74,11 @@ public class JilbMetrics {
             else break;
         }
         if (depth < prevDepth) {
-            this.compareMaps(depth);
+            this.compareMaps();
             List<Integer> simpleList = new LinkedList<>(simpleOperands.keySet());
             for (int l : simpleList) {
                 if (l >= depth) simpleOperands.remove(l);
             }
-            /*for (int conditionalKey : simpleOperands.keySet()) {
-                if (conditionalKey >= depth) simpleOperands.remove(conditionalKey);
-            }*/
             List<Integer> list = new LinkedList<>(tempElif.keySet());
             for (int l : list) {
                 if (l > depth) tempElif.remove(l);
@@ -90,13 +87,8 @@ public class JilbMetrics {
             for (int l : ifList) {
                 if (l > depth) ifLevels.remove(l);
             }
-            /*for (int elifKey : tempElif.keySet()) {
-                if (elifKey > depth) tempElif.remove(elifKey);
-            }*/
         }
-        if (depth < elifLevel) {
-            elifCount = false;
-        }
+        if (depth < elifLevel) elifCount = false;
         if (this.isCycleOperatorsInLine(line) || this.isIfInLine(line)) {
             if (this.isIfInLine(line)) ifLevels.add(depth);
             simpleOperands.put(depth, 1);
@@ -114,7 +106,7 @@ public class JilbMetrics {
         prevDepth = depth;
     }
 
-    private void compareMaps(int depth) {
+    private void compareMaps() {
         int sum = 0;
         for (int conditionals : simpleOperands.values()) {
             sum += conditionals;

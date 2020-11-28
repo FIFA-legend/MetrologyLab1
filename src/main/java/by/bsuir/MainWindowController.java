@@ -12,9 +12,14 @@ public class MainWindowController {
     private Button jilbMetricsButton;
 
     @FXML
+    private Button spenButton;
+
+    @FXML
     void initialize() {
         holshedMetricsButton.setOnAction(actionEvent -> App.hideWindow("HolshedMetricsWindow.fxml"));
 
         jilbMetricsButton.setOnAction(actionEvent -> App.hideWindow("JilbMetricsWindow.fxml"));
+
+        spenButton.setOnAction(actionEvent -> App.hideWindow("ChepinMetricsWindow.fxml"));
     }
 }

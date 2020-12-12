@@ -63,9 +63,17 @@ public class LexicalAnalyzer {
                 }
             }
 
-            if (str.charAt(i) == '"' || str.charAt(i) == '\'') {
+            if (str.charAt(i) == '"') {
                 i++;
-                while (!((str.charAt(i) == '"') || (str.charAt(i) == '\''))) {
+                while (str.charAt(i) != '"') {
+                    i++;
+                }
+                i++;
+            }
+
+            if (str.charAt(i) == '\'') {
+                i++;
+                while (str.charAt(i) != '\'') {
                     i++;
                 }
                 i++;

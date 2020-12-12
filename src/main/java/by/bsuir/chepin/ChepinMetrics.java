@@ -34,7 +34,7 @@ public class ChepinMetrics {
     public Map<String, Integer> getOperatorsCount(Map<String, Integer> map) {
         List<String> list = new LinkedList<>(map.keySet());
         for (String l : list) {
-            if (l.contains("\"") || Character.isDigit(l.charAt(0))) {
+            if (l.contains("\"") || l.contains("'") || Character.isDigit(l.charAt(0))) {
                 map.remove(l);
             }
         }

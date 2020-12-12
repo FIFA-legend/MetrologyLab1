@@ -1,6 +1,7 @@
 package by.bsuir.chepin;
 
 import by.bsuir.holshed.Container;
+import by.bsuir.holshed.Dictionary;
 import by.bsuir.holshed.FileService;
 
 import java.io.*;
@@ -33,8 +34,9 @@ public class ChepinMetrics {
 
     public Map<String, Integer> getOperatorsCount(Map<String, Integer> map) {
         List<String> list = new LinkedList<>(map.keySet());
+        Dictionary dictionary = new Dictionary();
         for (String l : list) {
-            if (l.contains("\"") || l.contains("'") || Character.isDigit(l.charAt(0))) {
+            if (l.contains("\"") || l.contains("'") || Character.isDigit(l.charAt(0)) || dictionary.isInPyKeywordsOperands(l)) {
                 map.remove(l);
             }
         }

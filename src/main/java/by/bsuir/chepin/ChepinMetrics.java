@@ -47,7 +47,7 @@ public class ChepinMetrics {
     public Map<String, String> chepinMetrics(Map<String, Integer> map) {
         Map<String, String> chepinMap = new HashMap<>();
         for (String str : map.keySet()) {
-            if (isConditional(str)) {
+            /*if (isConditional(str)) {
                 chepinMap.put(str, "C");
             } else if (isModifiable(str)) {
                 chepinMap.put(str, "M");
@@ -55,6 +55,15 @@ public class ChepinMetrics {
                 chepinMap.put(str, "P");
             } else {
                 chepinMap.put(str, "T");
+            }*/
+            if (map.get(str) == 0) {
+                chepinMap.put(str, "T");
+            } else if (this.isConditional(str)) {
+                chepinMap.put(str, "C");
+            } else if (this.isInput(str)) {
+                chepinMap.put(str, "P");
+            } else {
+                chepinMap.put(str, "M");
             }
         }
         return chepinMap;
@@ -68,7 +77,7 @@ public class ChepinMetrics {
                 String inputPattern = key + "\\s*=[\\s|\\S]*input([\\s|\\S]*)[\\s|\\S]*";
                 String outputPattern = "\\s*print([\\s|\\S]*" + key + "[\\s|\\S]*)[\\s|\\S]*";
                 boolean isMatch = br.lines()
-                    .anyMatch(line -> line.matches(inputPattern) || line.matches(outputPattern));
+                    .anyMatch(line -> line.trim().matches(inputPattern) || line.trim().matches(outputPattern));
                 if (isMatch) newMap.put(key, map.get(key));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -103,7 +112,7 @@ public class ChepinMetrics {
     private boolean isInput(String str) {
         try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
             String regex = str + "\\s*=[\\s|\\S]*input([\\s|\\S]*)[\\s|\\S]*";
-            return br.lines().anyMatch(line -> line.trim().matches(regex));
+            return br.lines().anyMatch(line -> line.trim().matches(regex)) && !this.isModifiable(str);
         } catch (IOException e) {
             e.printStackTrace();
         }

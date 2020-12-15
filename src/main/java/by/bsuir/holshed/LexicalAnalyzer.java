@@ -31,6 +31,7 @@ public class LexicalAnalyzer {
                     operators.add(lexeme);
                 } else if (lexeme.contains("[]")) {
                     operators.add(lexeme);
+                    if (!lexeme.equals("[]")) operands.add(lexeme.substring(0, lexeme.length() - 2));
                 } else {
                     operands.add(lexeme);
                 }
